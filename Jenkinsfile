@@ -1,60 +1,38 @@
-
 pipeline{
-    tools{
-        jdk 'myjava'
-        maven 'mymaven'
-    }
-	agent any
-      stages{
-           stage('Checkout'){
-	    
-               steps{
-		 echo 'cloning..'
-                 git 'https://github.com/Sonal0409/DevOpsClassCodes.git'
-              }
-          }
-          stage('Compile'){
-             
-              steps{
-                  echo 'compiling..'
-                  sh 'mvn compile'
-	      }
-          }
-          stage('CodeReview'){
-		  
-              steps{
-		    
-		  echo 'codeReview'
-                  sh 'mvn pmd:pmd'
-              }
-          }
-           stage('UnitTest'){
-		  
-              steps{
-	         echo 'Testing'
-                  sh 'mvn test'
-              }
-               post {
-               success {
-                   junit 'target/surefire-reports/*.xml'
-               }
-           }	
-          }
-           stage('MetricCheck'){
-              
-              steps{
-                  sh 'mvn cobertura:cobertura -Dcobertura.report.format=xml'
-              }
-              
-          }
-          stage('Package'){
-		  
-              steps{
-		  
-                  sh 'mvn package'
-              }
-          }
-	     
-          
-      }
+        tools{
+        maven 'Maven394'
+}
+        agent{
+                label 'Agent'
+}
+        stages{
+
+        stage('fetch code'){
+                steps{
+                git 'https://github.com/Sonal0409/DevOpsClassCodes.git'
+
+}
+}
+        stage('clean'){
+                steps{
+                        sh 'mvn clean'
+}
+}
+        stage('compile'){
+                steps{
+                        sh 'mvn compile'
+}
+}
+
+        stage('test'){
+                steps{
+                        sh 'mvn test'
+}
+}
+        stage('package'){
+                steps{
+                        sh 'mvn package'
+}
+}
+}
 }
